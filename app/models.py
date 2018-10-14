@@ -1,4 +1,5 @@
 from app import db
+from app.utils import now_millis
 
 
 class Record(db.Model):
@@ -9,6 +10,8 @@ class Record(db.Model):
     date = db.Column(db.Date, nullable=False)
     kind = db.Column(db.Text, nullable=False)
     value = db.Column(db.Integer, nullable=False)
+    updated = db.Column(db.Integer, nullable=False, default=now_millis)
+    deleted = db.Column(db.Boolean, nullable=False, default=False)
 
 
 class RecordType(db.Model):
