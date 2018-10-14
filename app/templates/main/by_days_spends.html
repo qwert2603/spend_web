@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% set title='сумма расходов по дням' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>дата</th>
+            <th>сумма</th>
+        </tr>
+        {% for day_sum in day_sums %}
+            <tr>
+                <td>{{ day_sum.date }}</td>
+                <td>{{ day_sum.sum }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+.colored_link a {
+    color: orangered;
+}
+
+.colored_link a:hover {
+    color: red;
+}
+
+.margined_button {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
