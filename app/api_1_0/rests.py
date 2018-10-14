@@ -48,12 +48,12 @@ def save_records():
             record_uuid = record.get('uuid')
             uuid.UUID(record_uuid)
             type_id = int(record.get('type_id'))
-            if type_id not in records_types_ids: abort(400)
+            if type_id not in records_types_ids: raise Exception()
             date = datetime.datetime.strptime(record.get('date'), "%Y-%m-%d").date()
             kind = record.get('kind').strip()
-            if len(kind) == 0: abort(400)
+            if len(kind) == 0: raise Exception()
             value = record.get('value')
-            if value <= 0: abort(400)
+            if value <= 0: raise Exception()
             record = Record.query.get(record_uuid)
             if record is None:
                 db.session.add(Record(uuid=record_uuid, record_type_id=type_id, date=date, kind=kind, value=value))
@@ -65,6 +65,7 @@ def save_records():
                 record.value = value
                 record.updated = now_millis()
         except Exception:
+            db.session.rollback()
             abort(400)
 
     return 'ok'
