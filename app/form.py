@@ -1,4 +1,4 @@
-from wtforms import DateField, IntegerField
+from wtforms import DateField, IntegerField, TimeField
 from wtforms.widgets import Input
 
 
@@ -8,6 +8,14 @@ class DateInput(Input):
 
 class DateFieldWidget(DateField):
     widget = DateInput()
+
+
+class TimeInput(Input):
+    input_type = 'time'
+
+
+class TimeFieldWidget(TimeField):
+    widget = TimeInput()
 
 
 class IntegerInput(Input):

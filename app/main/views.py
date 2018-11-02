@@ -27,6 +27,6 @@ def add_record():
     form = AddRecordForm()
     if form.validate_on_submit():
         db.session.add(Record(uuid=uuid.uuid4(), record_type_id=form.type.data, date=form.date.data,
-                              kind=form.kind.data, value=form.value.data))
+                              time=form.time.data, kind=form.kind.data, value=form.value.data))
         return redirect(url_for('.index'))
     return render_template('main/add_record.html', form=form)
