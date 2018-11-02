@@ -8,6 +8,7 @@ class Record(db.Model):
     uuid = db.Column(db.Text, primary_key=True)
     record_type_id = db.Column(db.Integer, db.ForeignKey('record_types.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=True)
     kind = db.Column(db.Text, nullable=False)
     value = db.Column(db.Integer, nullable=False)
     updated = db.Column(db.Integer, nullable=False, default=now_millis)

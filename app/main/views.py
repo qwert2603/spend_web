@@ -11,7 +11,9 @@ from app.utils import get_sums_by_days_spends
 
 @main.route('/')
 def index():
-    records = Record.query.order_by(Record.date.desc(), Record.record_type_id, Record.uuid).all()
+    records = Record.query \
+        .order_by(Record.date.desc(), Record.time.desc().nullslast(), Record.record_type_id, Record.uuid) \
+        .all()
     return render_template('main/index.html', records=records)
 
 

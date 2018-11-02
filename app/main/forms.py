@@ -22,4 +22,4 @@ class AddRecordForm(FlaskForm):
         if field.data <= 0:
             raise ValidationError('value <= 0')
         if field.data > 100000:
-            raise ValidationError('value <= 100.000')
+            raise ValidationError('value > 100.000')
