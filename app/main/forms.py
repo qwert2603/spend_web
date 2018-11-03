@@ -9,8 +9,8 @@ from app.models import RecordType
 
 class AddRecordForm(FlaskForm):
     type = SelectField('тип', coerce=int)
-    date = DateFieldWidget('дата', validators=[DataRequired()], default=datetime.date.today())
-    time = TimeFieldWidget('время', validators=[Optional()], default=datetime.datetime.now())
+    date = DateFieldWidget('дата', validators=[DataRequired()], default=datetime.date.today)
+    time = TimeFieldWidget('время', validators=[Optional()], default=datetime.datetime.now)
     kind = StringField('вид', validators=[Length(1, 64)])
     value = IntegerFieldWidget('сумма', validators=[DataRequired()])
     submit = SubmitField('сохранить')
