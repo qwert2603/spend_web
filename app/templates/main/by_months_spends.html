@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% set title='сумма расходов по дням' %}
+{% set title='сумма расходов по месяцам' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -12,13 +12,15 @@
 
     <table class="table">
         <tr>
-            <th>дата</th>
+            <th>год</th>
+            <th>месяц</th>
             <th>сумма</th>
         </tr>
-        {% for day_sum in day_sums %}
+        {% for month_sum in month_sums %}
             <tr>
-                <td>{{ moment(day_sum.date).format('LL') }}</td>
-                <td>{{ day_sum.sum }}</td>
+                <td>{{ month_sum.year }}</td>
+                <td>{{ month_names[month_sum.month - 1] }}</td>
+                <td>{{ month_sum.sum }}</td>
             </tr>
         {% endfor %}
     </table>

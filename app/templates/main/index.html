@@ -10,7 +10,7 @@
         <h1>{{ title }}</h1>
     </div>
 
-    <a class="btn btn-success margined_button" href="{{ url_for('main.add_record') }}">новая запись</a>
+    {#    <a class="btn btn-success margined_button" href="{{ url_for('main.add_record') }}">новая запись</a>#}
 
     <table class="table">
         <tr>
@@ -18,19 +18,21 @@
             <th>дата</th>
             <th>время</th>
             <th>вид</th>
+            <th>категория</th>
             <th>сумма</th>
         </tr>
         {% for record in records %}
             <tr>
                 <td>
-                    {% if record.record_type_id==1 %}
+                    {% if record.record_category.record_type_id==1 %}
                         <span style="color:orangered;">расход</span>
-                    {% elif record.record_type_id==2 %}
+                    {% elif record.record_category.record_type_id==2 %}
                         <span style="color:green;">доход</span>
                     {% endif %}
                 </td>
-                <td>{{ record.date }}</td>
+                <td>{{ moment(record.date).format('LL')}}</td>
                 <td>{{ record.time or '' }}</td>
+                <td>{{ record.record_category.name }}</td>
                 <td>{{ record.kind }}</td>
                 <td>{{ record.value }}</td>
             </tr>
