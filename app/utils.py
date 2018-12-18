@@ -14,7 +14,7 @@ def get_sums_by_days_spends():
           r.date,
           sum(r.value)
         FROM records r LEFT JOIN record_categories c ON c.uuid = r.record_category_uuid
-        WHERE c.record_type_id=1 AND r.date >= '{}'
+        WHERE c.record_type_id = 1 AND r.date >= '{}' AND NOT r.deleted
         GROUP BY r.date
         ORDER BY r.date;
     '''.format(start_date)
@@ -25,10 +25,11 @@ def get_sums_by_days_spends():
 def get_sums_by_months_spends():
     sql = '''
         SELECT
-          extract(YEAR FROM DATE)  y,
-          extract(MONTH FROM DATE) m,
-          sum(value)
-        FROM records
+          extract(YEAR FROM r.date)  y,
+          extract(MONTH FROM r.date) m,
+          sum(r.value)
+        FROM records r LEFT JOIN record_categories c ON c.uuid = r.record_category_uuid
+        WHERE c.record_type_id = 1 AND NOT r.deleted
         GROUP BY y, m
         ORDER BY y, m
     '''

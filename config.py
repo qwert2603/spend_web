@@ -16,7 +16,7 @@ class DevConfig(Config):
     DEBUG = True
     SECRET_KEY = '1918'
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db_dev.sqlite')
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@127.0.0.1:5432/spend_test'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@127.0.0.1:5432/test_spend'
 
 
 class ProdConfig(Config):

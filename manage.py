@@ -3,7 +3,7 @@
 from app import create_app, db
 from app.utils import month_names
 
-app = create_app('mother')
+app = create_app('dev')
 
 
 @app.shell_context_processor
