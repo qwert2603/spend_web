@@ -1,15 +1,11 @@
-import uuid
-
 import datetime
 
 from dateutil.relativedelta import relativedelta
-from flask import render_template, redirect, url_for
+from flask import render_template
 
-from app import db
 from app.main import main
-from app.main.forms import AddRecordForm
 from app.models import Record, RecordCategory
-from app.utils import get_sums_by_days_spends, get_sums_by_months_spends
+from app.utils import get_sums_by_days_spends, get_sums_by_months_spends, get_years
 
 
 @main.route('/')
@@ -34,6 +30,11 @@ def by_days_spends():
 @main.route('/by_months_spends')
 def by_months_spends():
     return render_template('main/by_months_spends.html', month_sums=get_sums_by_months_spends())
+
+
+@main.route('/by_categories')
+def by_categories():
+    return render_template('main/by_categories.html', years=get_years())
 
 # @main.route('/add_record', methods=['GET', 'POST'])
 # def add_record():

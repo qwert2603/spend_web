@@ -50,6 +50,16 @@ def get_records_types_ids():
     return result
 
 
+def get_years():
+    sql = '''
+        SELECT DISTINCT
+          extract(YEAR FROM date) y
+        FROM records
+        ORDER BY y
+    '''
+    return [int(row[0]) for row in _execute_sql(sql)]
+
+
 month_names = [
     'январь',
     'февраль',

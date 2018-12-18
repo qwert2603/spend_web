@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% set title='суммы по категориям' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>год</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for year in years %}
+            <tr>
+                <td>{{ year }}</td>
+                <td>расходы</td>
+                <td>доходы</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
