@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>категория</th>
+            {% for month in month_names %}
+                <th>{{ month }}</th>
+            {% endfor %}
+            <th>всего</th>
+        </tr>
+        {% for category in categories %}
+            <tr>
+                <td><b>{{ category.name }}</b></td>
+                {% for month in month_names %}
+                    <td>{{ sums_by_categories_month.get(category.uuid, {}).get(loop.index) or '' }}</td>
+                {% endfor %}
+                <td><b>{{ sums_by_categories_month.get(category.uuid, {}).get(-1) or '' }}</b></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td><b>всего</b></td>
+            {% for month in month_names %}
+                <td><b>{{ sums_by_categories_month.get('_all', {}).get(loop.index) or '' }}</b></td>
+            {% endfor %}
+            <td><b>{{ sums_by_categories_month.get('_all', {}).get(-1) or '' }}</b></td>
+        </tr>
+
+    </table>
+
+{% endblock %}

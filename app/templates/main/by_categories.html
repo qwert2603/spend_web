@@ -19,8 +19,16 @@
         {% for year in years %}
             <tr>
                 <td>{{ year }}</td>
-                <td>расходы</td>
-                <td>доходы</td>
+                <td>
+                    <a href="{{ url_for('main.by_categories_table',year=year,record_type_id=1) }}">
+                        расходы
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('main.by_categories_table',year=year,record_type_id=2) }}">
+                        доходы
+                    </a>
+                </td>
             </tr>
         {% endfor %}
     </table>

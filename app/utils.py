@@ -50,6 +50,42 @@ def get_records_types_ids():
     return result
 
 
+def get_sums_by_categories_month(year, record_type_id):
+    # { category_uuid: { month : sum } }
+    # month = -1 means sum for whole year.
+    # category_uuid = '_all' means sum for all categories.
+    sql = '''
+        SELECT
+          record_category_uuid,
+          extract(MONTH FROM r.date) mnth,
+          sum(r.value)
+        FROM (SELECT
+                uuid,
+                name
+              FROM record_categories
+              WHERE record_type_id = {}
+              ORDER BY name) c LEFT JOIN records r ON c.uuid = r.record_category_uuid
+        WHERE extract(YEAR FROM r.date) = {} AND NOT r.deleted
+        GROUP BY record_category_uuid, mnth;
+    '''.format(record_type_id, year)
+    result = dict()
+    result['_all'] = dict()
+    result['_all'][-1] = 0
+    for i in range(1, 13): result['_all'][i] = 0
+    for row in _execute_sql(sql):
+        category_uuid = row[0]
+        month = int(row[1])
+        sum = int(row[2])
+        if result.get(category_uuid) is None:
+            result[category_uuid] = dict()
+            result[category_uuid][-1] = 0
+        result[category_uuid][month] = sum
+        result[category_uuid][-1] += sum
+        result['_all'][month] += sum
+        result['_all'][-1] += sum
+    return result
+
+
 def get_years():
     sql = '''
         SELECT DISTINCT
