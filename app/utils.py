@@ -17,7 +17,7 @@ def get_sums_by_days_spends():
         FROM records r LEFT JOIN record_categories c ON c.uuid = r.record_category_uuid
         WHERE c.user_id = {} AND c.record_type_id = 1 AND r.date >= '{}' AND NOT r.deleted
         GROUP BY r.date
-        ORDER BY r.date;
+        ORDER BY r.date DESC;
     '''.format(Config.records_user_id(), start_date)
     from app.models import DaySum
     return [DaySum(row) for row in _execute_sql(sql)]
@@ -32,7 +32,7 @@ def get_sums_by_months_spends():
         FROM records r LEFT JOIN record_categories c ON c.uuid = r.record_category_uuid
         WHERE c.user_id = {} AND c.record_type_id = 1 AND NOT r.deleted
         GROUP BY y, m
-        ORDER BY y, m
+        ORDER BY y DESC, m DESC
     '''.format(Config.records_user_id())
     from app.models import MonthSum
     return [MonthSum(row) for row in _execute_sql(sql)]
@@ -92,7 +92,7 @@ def get_years():
         SELECT DISTINCT
           extract(YEAR FROM date) y
         FROM records
-        ORDER BY y
+        ORDER BY y DESC
     '''
     return [int(row[0]) for row in _execute_sql(sql)]
 

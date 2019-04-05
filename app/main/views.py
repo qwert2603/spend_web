@@ -19,7 +19,8 @@ def index():
         .join(RecordCategory, Record.record_category_uuid == RecordCategory.uuid) \
         .filter(RecordCategory.user_id == Config.records_user_id(), Record.date >= start_date,
                 Record.deleted == False) \
-        .order_by(Record.date, Record.time.nullsfirst(), RecordCategory.name, Record.kind, Record.uuid) \
+        .order_by(Record.date.desc(), Record.time.desc().nullslast(), RecordCategory.name.desc(), Record.kind.desc(),
+                  Record.uuid.desc()) \
         .all()
     return render_template('main/index.html', records=records)
 
