@@ -10,3 +10,12 @@
     margin-top: 24px;
     margin-bottom: 24px;
 }
+
+@font-face {
+    font-family: google_sans;
+    src: url('google_sans.ttf');
+}
+
+body {
+    font-family: google_sans, sans-serif
+}
