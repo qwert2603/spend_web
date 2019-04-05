@@ -1,6 +1,6 @@
 # spend_web
 
-This is web-version for Spend project.
+This is web-site for Spend project.
 
 Android-app is https://github.com/qwert2603/spend_android
 
