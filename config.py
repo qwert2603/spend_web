@@ -28,7 +28,7 @@ class DevConfig(Config):
 class ProdConfig(Config):
     SECRET_KEY = '1918'
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@127.0.0.1:5432/spend'
-    RECORDS_USER_ID = 2
+    RECORDS_USER_ID = 3
 
 
 config = {
