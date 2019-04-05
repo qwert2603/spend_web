@@ -6,6 +6,7 @@ from flask import render_template
 from app.main import main
 from app.models import Record, RecordCategory, RecordType
 from app.utils import get_sums_by_days_spends, get_sums_by_months_spends, get_years, get_sums_by_categories_month
+from config import Config
 
 
 @main.route('/')
@@ -16,7 +17,8 @@ def index():
 
     records = Record.query \
         .join(RecordCategory, Record.record_category_uuid == RecordCategory.uuid) \
-        .filter(Record.date >= start_date) \
+        .filter(RecordCategory.user_id == Config.records_user_id(), Record.date >= start_date,
+                Record.deleted == False) \
         .order_by(Record.date, Record.time.nullsfirst(), RecordCategory.name.desc(), Record.kind, Record.uuid) \
         .all()
     return render_template('main/index.html', records=records)
@@ -40,7 +42,10 @@ def by_categories():
 @main.route('/by_categories/<int:year>/<int:record_type_id>')
 def by_categories_table(year, record_type_id):
     record_type = RecordType.query.get_or_404(record_type_id)
-    categories = record_type.record_categories.order_by(RecordCategory.name).all()
+    categories = record_type.record_categories \
+        .filter(RecordCategory.user_id == Config.records_user_id()) \
+        .order_by(RecordCategory.name) \
+        .all()
     return render_template('main/by_categories_table.html', year=year, record_type_id=record_type_id,
                            categories=categories, title='суммы по категориям. {} / {}'.format(year, record_type.name),
                            sums_by_categories_month=get_sums_by_categories_month(year, record_type_id))

@@ -3,6 +3,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from app import db
+from config import Config
 
 
 def get_sums_by_days_spends():
@@ -14,10 +15,10 @@ def get_sums_by_days_spends():
           r.date,
           sum(r.value)
         FROM records r LEFT JOIN record_categories c ON c.uuid = r.record_category_uuid
-        WHERE c.record_type_id = 1 AND r.date >= '{}' AND NOT r.deleted
+        WHERE c.user_id = {} AND c.record_type_id = 1 AND r.date >= '{}' AND NOT r.deleted
         GROUP BY r.date
         ORDER BY r.date;
-    '''.format(start_date)
+    '''.format(Config.records_user_id(), start_date)
     from app.models import DaySum
     return [DaySum(row) for row in _execute_sql(sql)]
 
@@ -29,10 +30,10 @@ def get_sums_by_months_spends():
           extract(MONTH FROM r.date) m,
           sum(r.value)
         FROM records r LEFT JOIN record_categories c ON c.uuid = r.record_category_uuid
-        WHERE c.record_type_id = 1 AND NOT r.deleted
+        WHERE c.user_id = {} AND c.record_type_id = 1 AND NOT r.deleted
         GROUP BY y, m
         ORDER BY y, m
-    '''
+    '''.format(Config.records_user_id())
     from app.models import MonthSum
     return [MonthSum(row) for row in _execute_sql(sql)]
 
@@ -56,18 +57,18 @@ def get_sums_by_categories_month(year, record_type_id):
     # category_uuid = '_all' means sum for all categories.
     sql = '''
         SELECT
-          record_category_uuid,
+          c.uuid,
           extract(MONTH FROM r.date) mnth,
           sum(r.value)
         FROM (SELECT
                 uuid,
                 name
               FROM record_categories
-              WHERE record_type_id = {}
+              WHERE user_id = {} AND record_type_id = {}
               ORDER BY name) c LEFT JOIN records r ON c.uuid = r.record_category_uuid
         WHERE extract(YEAR FROM r.date) = {} AND NOT r.deleted
-        GROUP BY record_category_uuid, mnth;
-    '''.format(record_type_id, year)
+        GROUP BY c.uuid, mnth;
+    '''.format(Config.records_user_id(), record_type_id, year)
     result = dict()
     result['_all'] = dict()
     result['_all'][-1] = 0

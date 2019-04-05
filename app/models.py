@@ -20,6 +20,7 @@ class RecordCategory(db.Model):
     uuid = db.Column(db.Text, primary_key=True)
     record_type_id = db.Column(db.Integer, db.ForeignKey('record_types.id'), nullable=False)
     name = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
     records = db.relationship('Record', backref='record_category', lazy='dynamic')
 
 
