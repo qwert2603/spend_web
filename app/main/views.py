@@ -51,11 +51,20 @@ def by_categories_table(year, record_type_id):
                            categories=categories, title='суммы по категориям. {} / {}'.format(year, record_type.name),
                            sums_by_categories_month=get_sums_by_categories_month(year, record_type_id))
 
-    # @main.route('/add_record', methods=['GET', 'POST'])
-    # def add_record():
-    #     form = AddRecordForm()
-    #     if form.validate_on_submit():
-    #         db.session.add(Record(uuid=uuid.uuid4(), record_type_id=form.type.data, date=form.date.data,
-    #                               time=form.time.data, kind=form.kind.data, value=form.value.data))
-    #         return redirect(url_for('.index'))
-    #     return render_template('main/add_record.html', form=form)
+
+@main.route('/current_month')
+def current_month():
+    d = datetime.date.today()
+    d = d + relativedelta(months=1)
+    d = d.replace(day=1)
+    d = d + relativedelta(days=-1)
+    total_days = d.day
+
+    current_day = datetime.date.today().day
+
+    categories = ['one', 'two', 'three']
+    limits = {'one': 10000, 'two': 3000, 'three': 4000}
+    spent = {'one': 7000, 'two': 1918, 'three': 4300}
+
+    return render_template('main/current_month.html', total_days=total_days, current_day=current_day,
+                           categories=categories, limits=limits, spent=spent)

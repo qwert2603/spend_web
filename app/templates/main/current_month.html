@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% set title = 'текущий месяц' %}
+{% set remain_days = total_days - current_day + 1 %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }} (день {{ current_day }} из {{ total_days }})</h1>
+    </div>
+
+    <table class="table">
+        <tr>
+            <td></td>
+            {% for category in categories %}
+                <td>{{ category }}</td>
+            {% endfor %}
+            <th>сумма</th>
+        </tr>
+        <tr>
+            <td>лимит</td>
+            {% for category in categories %}
+                <td>{{ limits[category] }}</td>
+            {% endfor %}
+            <th>{{ limits.values()|sum() }}</th>
+        </tr>
+        <tr>
+            <td>потрачено</td>
+            {% for category in categories %}
+                <td>{{ spent[category] }}</td>
+            {% endfor %}
+            <th>{{ spent.values()|sum() }}</th>
+        </tr>
+        <tr>
+            <td>осталось</td>
+            {% for category in categories %}
+                <td>{{ limits[category] - spent[category] }}</td>
+            {% endfor %}
+            <th>{{ limits.values()|sum() - spent.values()|sum() }}</th>
+        </tr>
+        <tr>
+            <td>тратим в день</td>
+            {% for category in categories %}
+                <td>{{ "%.2f"|format(spent[category] / current_day) }}</td>
+            {% endfor %}
+            <th>{{ "%.2f"|format(spent.values()|sum() / current_day) }}</th>
+        </tr>
+        <tr>
+            <td>осталось в день</td>
+            {% for category in categories %}
+                <td>{{ "%.2f"|format((limits[category] - spent[category]) / remain_days) }}</td>
+            {% endfor %}
+            <th>{{ "%.2f"|format((limits.values()|sum() - spent.values()|sum()) / remain_days) }}</th>
+        </tr>
+        <tr>
+            <td>текущий баланс</td>
+            {% for category in categories %}
+                {% set balance = current_day / total_days * limits[category] - spent[category] %}
+                <td>
+                    {% if balance >= 0 %}
+                        <span style="color: green;">{{ "%.2f"|format(balance) }}</span>
+                    {% else %}
+                        <span style="color: orangered;">{{ "%.2f"|format(balance) }}</span>
+                    {% endif %}
+                </td>
+            {% endfor %}
+            {% set total_balance = current_day / total_days * limits.values()|sum() - spent.values()|sum() %}
+            <th>
+                {% if total_balance >= 0 %}
+                    <span style="color: green;">{{ "%.2f"|format(total_balance) }}</span>
+                {% else %}
+                    <span style="color: orangered;">{{ "%.2f"|format(total_balance) }}</span>
+                {% endif %}
+            </th>
+        </tr>
+    </table>
+
+{% endblock %}
