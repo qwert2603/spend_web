@@ -2,7 +2,9 @@ import datetime
 
 from dateutil.relativedelta import relativedelta
 from flask import render_template
+from sqlalchemy import func
 
+from app import db
 from app.main import main
 from app.models import Record, RecordCategory, RecordType
 from app.utils import get_sums_by_days_spends, get_sums_by_months_spends, get_years, get_sums_by_categories_month
@@ -62,9 +64,28 @@ def current_month():
 
     current_day = datetime.date.today().day
 
-    categories = ['one', 'two', 'three']
-    limits = {'one': 10000, 'two': 3000, 'three': 4000}
-    spent = {'one': 7000, 'two': 1918, 'three': 4300}
+    categories = []
+    limits = {}
+    spent = {}
+
+    with open("month_limits.txt", 'r') as month_limits_file:
+        for line in month_limits_file.readlines():
+            split = line.split(" ")
+            categories.append(split[0])
+            limits[split[0]] = int(split[1])
+            spent[split[0]] = 0
+
+    start_date = datetime.date.today()
+    start_date = start_date.replace(day=1)
+    start_date = start_date + relativedelta(months=-1)
+    record_categories = db.session.query(RecordCategory.name, func.sum(Record.value)) \
+        .filter(Record.record_category_uuid == RecordCategory.uuid, RecordCategory.user_id == Config.records_user_id(),
+                Record.date >= start_date, RecordCategory.record_type_id == 1, Record.deleted == False) \
+        .group_by(RecordCategory.name, RecordCategory.change_id) \
+        .all()
+
+    for c in record_categories:
+        spent[c[0]] = c[1]
 
     return render_template('main/current_month.html', total_days=total_days, current_day=current_day,
                            categories=categories, limits=limits, spent=spent)
