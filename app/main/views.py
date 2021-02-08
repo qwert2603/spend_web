@@ -77,7 +77,7 @@ def current_month():
 
     start_date = datetime.date.today()
     start_date = start_date.replace(day=1)
-    start_date = start_date + relativedelta(months=-1)
+
     record_categories = db.session.query(RecordCategory.name, func.sum(Record.value)) \
         .filter(Record.record_category_uuid == RecordCategory.uuid, RecordCategory.user_id == Config.records_user_id(),
                 Record.date >= start_date, RecordCategory.record_type_id == 1, Record.deleted == False) \
