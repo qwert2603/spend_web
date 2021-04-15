@@ -1,7 +1,8 @@
 import datetime
 
 from dateutil.relativedelta import relativedelta
-from flask import render_template
+from flask import render_template, request, abort
+
 from sqlalchemy import func
 
 from app import db
@@ -62,7 +63,11 @@ def current_month():
     d = d + relativedelta(days=-1)
     total_days = d.day
 
-    current_day = datetime.date.today().day
+    day = request.args.get('day', type=int)
+    if day is not None and (day < 1 or day > total_days):
+        abort(400)
+    if day is None:
+        day = datetime.date.today().day
 
     categories = []
     limits = {}
@@ -87,5 +92,5 @@ def current_month():
     for c in record_categories:
         spent[c[0]] = c[1]
 
-    return render_template('main/current_month.html', total_days=total_days, current_day=current_day,
+    return render_template('main/current_month.html', total_days=total_days, day=day,
                            categories=categories, limits=limits, spent=spent)

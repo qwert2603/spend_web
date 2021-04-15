@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% set title = 'текущий месяц' %}
-{% set remain_days = total_days - current_day + 1 %}
+{% set remain_days = total_days - day + 1 %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block page_content %}
 
     <div class="page-header">
-        <h1>{{ title }} (день {{ current_day }} из {{ total_days }})</h1>
+        <h1>{{ title }} (день {{ day }} из {{ total_days }})</h1>
     </div>
 
     <table class="table">
@@ -43,9 +43,9 @@
         <tr>
             <td>тратим в день</td>
             {% for category in categories %}
-                <td>{{ "%.2f"|format(spent[category] / current_day) }}</td>
+                <td>{{ "%.2f"|format(spent[category] / day) }}</td>
             {% endfor %}
-            <th>{{ "%.2f"|format(spent.values()|sum() / current_day) }}</th>
+            <th>{{ "%.2f"|format(spent.values()|sum() / day) }}</th>
         </tr>
         <tr>
             <td>осталось в день</td>
@@ -57,7 +57,7 @@
         <tr>
             <td>текущий баланс</td>
             {% for category in categories %}
-                {% set balance = current_day / total_days * limits[category] - spent[category] %}
+                {% set balance = day / total_days * limits[category] - spent[category] %}
                 <td>
                     {% if balance >= 0 %}
                         <span style="color: green;">{{ "%.2f"|format(balance) }}</span>
@@ -66,7 +66,7 @@
                     {% endif %}
                 </td>
             {% endfor %}
-            {% set total_balance = current_day / total_days * limits.values()|sum() - spent.values()|sum() %}
+            {% set total_balance = day / total_days * limits.values()|sum() - spent.values()|sum() %}
             <th>
                 {% if total_balance >= 0 %}
                     <span style="color: green;">{{ "%.2f"|format(total_balance) }}</span>
